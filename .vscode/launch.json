@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "User Service",
+      "program": "${workspaceFolder}/user-service/index.js",
+      "cwd": "${workspaceFolder}/user-service",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Address Service",
+      "program": "${workspaceFolder}/address-service/index.js",
+      "cwd": "${workspaceFolder}/address-service",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}
