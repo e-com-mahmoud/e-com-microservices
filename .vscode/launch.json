@@ -16,6 +16,14 @@
       "program": "${workspaceFolder}/address-service/index.js",
       "cwd": "${workspaceFolder}/address-service",
       "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Product Service",
+      "program": "${workspaceFolder}/product-service/index.js",
+      "cwd": "${workspaceFolder}/product-service",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }
