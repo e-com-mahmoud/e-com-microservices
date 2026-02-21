@@ -1,10 +1,12 @@
 const { StatusCodes } = require("http-status-codes");
 
 const { productServices } = require("../../services");
+const kafkaProducer = require("../../kafka");
 
 async function createProduct(req, res) {
   try {
     const products = await productServices.createProduct([...req.body]);
+    await kafkaProducer.sendProductCreatedEvent(products);
     return res.status(StatusCodes.CREATED).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -44,7 +46,9 @@ async function updateProductDetails(req, res) {
   const { id } = req.params;
   const data = req.body;
   try {
-    await productServices.updateProduct(data, id);
+    const product = await productServices.updateProduct(data, id);
+    await kafkaProducer.sendProductUpdatedEvent(data, id);
+
     res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -55,7 +59,8 @@ async function updateProductDetails(req, res) {
 async function removeProduct(req, res) {
   const { id } = req.params;
   try {
-    await productServices.deleteProduct(id);
+    const product = await productServices.deleteProduct(id);
+    await kafkaProducer.sendProductDeletedEvent(id);
     res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

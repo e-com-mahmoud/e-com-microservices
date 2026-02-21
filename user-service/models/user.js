@@ -40,18 +40,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("USER", "ADMIN"),
         defaultValue: "USER",
       },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE,
-      },
-      deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
     },
     {
       sequelize,

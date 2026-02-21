@@ -1,5 +1,6 @@
 const kafka = require("./client");
 const { User } = require("../models");
+const topics = require("./topics");
 
 const consumer = kafka.consumer({ groupId: "address-service-group" });
 
@@ -14,7 +15,7 @@ async function runConsumer() {
       try {
         const event = JSON.parse(message.value.toString());
 
-        if (event.type === "USER_CREATED") {
+        if (event.type === topics.USER_CREATED) {
           await User.findOrCreate({
             where: { id: event.payload.id },
             defaults: {
@@ -24,7 +25,7 @@ async function runConsumer() {
               createdAt: event.payload.createdAt,
             },
           });
-        } else if (event.type === "USER_UPDATED") {
+        } else if (event.type === topics.USER_UPDATED) {
           await User.update(
             {
               email: event.payload.email,
@@ -34,10 +35,8 @@ async function runConsumer() {
             },
             { where: { id: event.payload.id } },
           );
-        } else if (event.type === "USER_DELETED") {
-          await User.destroy(
-            { where: { id: event.payload.id } },
-          );
+        } else if (event.type === topics.USER_DELETED) {
+          await User.destroy({ where: { id: event.payload.id } });
         }
       } catch (err) {
         console.error("❌ Error processing Kafka message", err);

@@ -24,6 +24,14 @@
       "program": "${workspaceFolder}/product-service/index.js",
       "cwd": "${workspaceFolder}/product-service",
       "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Cart Service",
+      "program": "${workspaceFolder}/cart-service/index.js",
+      "cwd": "${workspaceFolder}/cart-service",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

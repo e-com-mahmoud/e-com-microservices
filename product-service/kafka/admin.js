@@ -7,18 +7,18 @@ async function initKafka() {
 
   const topics = await admin.listTopics();
 
-  if (!topics.includes('product-events')) {
+  if (!topics.includes('user-events')) {
     await admin.createTopics({
       topics: [
         {
-          topic: 'product-events',
+          topic: 'user-events',
           numPartitions: 3,
           replicationFactor: 1,
         },
       ],
     });
 
-    console.log('Kafka topic "product-events" created');
+    console.log('Kafka topic "user-events" created');
   }
 
   await admin.disconnect();
