@@ -5,26 +5,26 @@ const { cartServices, itemServices } = require("../../services");
 async function createUserCart(req, res) {
   const { id: userId } = req.user;
   try {
-    const cart = await cartServices.createCart({ userId });
-    res.status(StatusCodes.CREATED).send(cart);
+    const cart = await cartServices.createUserCart({ userId });
+    return res.status(StatusCodes.CREATED).send(cart);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
 async function getCart(req, res) {
   const { id } = req.user;
   try {
-    const cart = await cartServices.getExposedCart(id);
-    res.status(StatusCodes.OK).send(cart);
+    const cart = await cartServices.getCart(id);
+    return res.status(StatusCodes.OK).send(cart);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-async function addItemsToCart(req, res) {
+async function createItems(req, res) {
   const { id } = req.cart;
   try {
     await cartServices.updateCartStatus({ status: "INCOMPLETE" }, id);
@@ -32,11 +32,11 @@ async function addItemsToCart(req, res) {
       e.cartId = id;
       return e;
     });
-    await itemServices.createItem(items);
-    res.status(StatusCodes.CREATED).send();
+    await itemServices.createItems(items);
+    return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
@@ -45,30 +45,30 @@ async function updateItem(req, res) {
   const { quantity } = req.body;
   try {
     const item = await itemServices.updateItemQuantity(quantity, id);
-    res.status(StatusCodes.NO_CONTENT).send();
+    return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-async function removeItem(req, res) {
+async function deleteItem(req, res) {
   const { id } = req.item;
   try {
     const item = await itemServices.deleteItem(id);
-    res.status(StatusCodes.OK).send("deleted");
+    return res.status(StatusCodes.OK).send("deleted");
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
 const controller = {
   createUserCart,
   getCart,
-  addItemsToCart,
+  createItems,
   updateItem,
-  removeItem,
+  deleteItem,
 };
 
 module.exports = controller;

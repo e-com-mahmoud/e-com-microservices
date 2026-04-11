@@ -1,3 +1,3 @@
-const productDataMapper = require('./helpers');
+const { productDataMapper, createProductEventMapper } = require("./helpers");
 
-module.exports = productDataMapper;
+module.exports = { productDataMapper, createProductEventMapper };

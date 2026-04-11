@@ -1,6 +1,6 @@
 const models = require("../models");
 
-async function createItem(item) {
+async function createItems(item) {
   return models.Item.bulkCreate(item);
 }
 
@@ -15,6 +15,6 @@ async function deleteItem(id) {
   return models.Item.destroy({ where: { id } });
 }
 
-const services = { createItem, findItem, updateItemQuantity, deleteItem };
+const services = { createItems, findItem, updateItemQuantity, deleteItem };
 
 module.exports = services;

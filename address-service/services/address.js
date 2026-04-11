@@ -13,7 +13,7 @@ async function findAllUserAddresses(id) {
   });
 }
 
-async function findUserExposedAddress(id) {
+async function getUserAddress(id) {
   return models.Address.findOne({
     where: { id },
     attributes: {
@@ -35,17 +35,17 @@ async function updateAddress(data, id) {
   return models.Address.update(data, { where: { id } });
 }
 
-async function removeAddress(id) {
+async function deleteAddress(id) {
   return models.Address.destroy({ where: { id } });
 }
 
 const addressServices = {
   createAddress,
   findAllUserAddresses,
-  findUserExposedAddress,
+  getUserAddress,
   checkAddressUser,
   updateAddress,
-  removeAddress,
+  deleteAddress,
 };
 
 module.exports = addressServices;

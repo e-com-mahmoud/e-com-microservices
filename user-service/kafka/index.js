@@ -1,3 +1,3 @@
-const kafkaProducers = require("./producer");
+const kafkaProducers = require("./producers/producer");
 
 module.exports = kafkaProducers;

@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.post("/", checkAvailableCart, controller.createUserCart);
 router.get("/", checkCart, controller.getCart);
-router.post("/item", checkCart, controller.addItemsToCart);
+router.post("/item", checkCart, controller.createItems);
 router.put("/item/:id", checkCart, checkItem, controller.updateItem);
-router.delete("/item/:id", checkCart, checkItem, controller.removeItem);
+router.delete("/item/:id", checkCart, checkItem, controller.deleteItem);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const models = require("../models");
 
-async function create(userDetails) {
+async function createUser(userDetails) {
   return models.User.create(userDetails);
 }
 
@@ -10,11 +10,11 @@ async function findUserByEmail(email) {
   });
 }
 
-async function findUser(decoded) {
-  return models.User.findOne({ where: { id: decoded.userId } });
+async function findUser(userId) {
+  return models.User.findOne({ where: { id: userId } });
 }
 
-async function findExposedUser(id) {
+async function getUser(id) {
   return models.User.findOne({
     where: { id },
     attributes: {
@@ -38,10 +38,10 @@ async function deleteUser(id) {
 }
 
 const services = {
-  create,
+  createUser,
   findUserByEmail,
   findUser,
-  findExposedUser,
+  getUser,
   updateUser,
   deleteUser
 };

@@ -1,18 +1,18 @@
 const kafka = require("../client");
 const events = require("../../events");
+const consumer = kafka.consumer({ groupId: "address-service-group" });
 
-const consumer = kafka.consumer({ groupId: "cart-user-service-group" });
-
-async function runUserConsumer() {
+async function runConsumer() {
   await consumer.connect();
   await consumer.subscribe({ topic: "user-events", fromBeginning: true });
 
-  console.log("cart Service Kafka consumer running...");
+  console.log("Address Service Kafka consumer running");
 
   await consumer.run({
     eachMessage: async ({ message }) => {
       try {
         const event = JSON.parse(message.value.toString());
+
         const handler = events[event.type];
         await handler(event);
       } catch (e) {
@@ -21,5 +21,6 @@ async function runUserConsumer() {
     },
   });
 }
+runConsumer().catch((err) => console.error(err));
 
-module.exports = runUserConsumer;
+module.exports = runConsumer;

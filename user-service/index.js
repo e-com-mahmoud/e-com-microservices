@@ -1,13 +1,13 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
 const db = require("./models");
 const routes = require("./api");
 const { initKafka } = require("./kafka/admin");
+const config = require("./config/config");
 
 const app = express();
-const port = process.env.PORT;
+const { port } = config.app;
 
 app.use(cors());
 app.use(express.json());

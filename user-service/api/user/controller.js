@@ -1,19 +1,21 @@
 const { StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcrypt");
-const kafkaProducer = require("../../kafka");
+const kafkaProducer = require("../../kafka/producers/producer");
 
 const { userServices } = require("../../services");
 const tokenGen = require("../../utils/token");
+const { jwt } = require("../../config/config");
+const { kafka } = require("../../config/config");
 
-const saltRounds = Number(process.env.SALT_ROUNDS);
+const saltRounds = Number(jwt.saltRounds);
 
 async function createUser(req, res) {
   try {
     const { password } = req.body;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     req.body.password = hashedPassword;
-    const user = await userServices.create({ ...req.body });
-    await kafkaProducer.sendUserCreatedEvent(user);
+    const user = await userServices.createUser({ ...req.body });
+    await kafkaProducer(kafka.producer.topics.USER_CREATED, user);
     const token = tokenGen({ userId: user.id });
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
@@ -25,7 +27,7 @@ async function createUser(req, res) {
 async function getUser(req, res) {
   const { id } = req.user;
   try {
-    const user = await userServices.findExposedUser(id);
+    const user = await userServices.getUser(id);
     return res.status(StatusCodes.OK).send(user);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -37,7 +39,10 @@ async function updateUser(req, res) {
   const { id } = req.user;
   try {
     await userServices.updateUser({ ...req.body }, id);
-    await kafkaProducer.sendUserUpdatedEvent({ ...req.body }, id);
+    await kafkaProducer(kafka.producer.topics.USER_UPDATED, {
+      ...req.body,
+      id,
+    });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -45,18 +50,18 @@ async function updateUser(req, res) {
   }
 }
 
-async function removeUser(req, res) {
+async function deleteUser(req, res) {
   const { id } = req.user;
   try {
-    await userServices.deleteUser(id)
-    await kafkaProducer.sendUserDeletedEvent(id)
-    return res.status(StatusCodes.OK).send('deleted');
+    await userServices.deleteUser(id);    
+    await kafkaProducer(kafka.producer.topics.USER_DELETED,{id});
+    return res.status(StatusCodes.OK).send("deleted");
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-const controller = { createUser, getUser, updateUser, removeUser };
+const controller = { createUser, getUser, updateUser, deleteUser };
 
 module.exports = controller;

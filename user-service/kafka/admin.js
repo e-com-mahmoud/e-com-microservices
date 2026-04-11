@@ -12,8 +12,6 @@ async function initKafka() {
       topics: [
         {
           topic: 'product-events',
-          numPartitions: 3,
-          replicationFactor: 1,
         },
       ],
     });

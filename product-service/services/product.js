@@ -17,7 +17,12 @@ async function getAllProducts(options) {
 }
 
 async function getOneProduct(id) {
-  return await models.Product.findOne({ where: { id } });
+  return await models.Product.findOne({
+    where: { id },
+    attributes: {
+      exclude: ["deletedAt", "createdAt", "updatedAt"],
+    },
+  });
 }
 
 async function updateProduct(data, id) {

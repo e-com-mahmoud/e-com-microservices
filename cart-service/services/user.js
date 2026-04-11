@@ -6,6 +6,18 @@ async function findUser(decoded) {
   });
 }
 
-const userServices = { findUser };
+async function createOrFindUser(event) {
+  return await models.User.findOrCreate({
+    where: { id: event.payload.id },
+    defaults: {
+      createdAt: event.payload.createdAt,
+    },
+  });
+}
+async function deleteUser(event) {
+  return await models.User.destroy({ where: { id: event.payload.id } });
+}
+
+const userServices = { findUser, createOrFindUser, deleteUser };
 
 module.exports = userServices;

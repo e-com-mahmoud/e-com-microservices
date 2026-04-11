@@ -2,15 +2,18 @@ const { StatusCodes } = require("http-status-codes");
 
 const { productServices } = require("../../services");
 const kafkaProducer = require("../../kafka");
+const { kafka } = require("../../config/config");
+const { createProductEventMapper } = require("../../utils");
 
 async function createProduct(req, res) {
   try {
     const products = await productServices.createProduct([...req.body]);
-    await kafkaProducer.sendProductCreatedEvent(products);
+    const productsMap = await createProductEventMapper(products);
+    await kafkaProducer(kafka.producer.topics.PRODUCT_CREATED, productsMap);
     return res.status(StatusCodes.CREATED).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
@@ -21,59 +24,61 @@ async function createProduct(req, res) {
     ]
  */
 
-async function listAllProducts(req, res) {
+async function getAllProducts(req, res) {
   const options = req.queryOptions;
   try {
     const products = await productServices.getAllProducts(options);
-    res.status(StatusCodes.OK).send(products);
+    return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-async function findProduct(req, res) {
+async function getOneProduct(req, res) {
   const product = req.product;
   try {
-    res.send(product);
+    return res.send(product);
   } catch (error) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-async function updateProductDetails(req, res) {
+async function updateProduct(req, res) {
   const { id } = req.params;
-  const data = req.body;
   try {
-    const product = await productServices.updateProduct(data, id);
-    await kafkaProducer.sendProductUpdatedEvent(data, id);
+    const product = await productServices.updateProduct({ ...req.body }, id);
+    await kafkaProducer(kafka.producer.topics.PRODUCT_UPDATED, {
+      ...req.body,
+      id,
+    });
 
-    res.status(StatusCodes.NO_CONTENT).send();
+    return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-async function removeProduct(req, res) {
+async function deleteProduct(req, res) {
   const { id } = req.params;
   try {
     const product = await productServices.deleteProduct(id);
-    await kafkaProducer.sendProductDeletedEvent(id);
-    res.status(StatusCodes.OK).send();
+    await kafkaProducer(kafka.producer.topics.PRODUCT_DELETED, { id });
+    return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
 const controller = {
   createProduct,
-  listAllProducts,
-  findProduct,
-  updateProductDetails,
-  removeProduct,
+  getAllProducts,
+  getOneProduct,
+  updateProduct,
+  deleteProduct,
 };
 
 module.exports = controller;

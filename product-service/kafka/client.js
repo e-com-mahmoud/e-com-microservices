@@ -1,13 +1,13 @@
-const path = require('path')
-require('dotenv').config({
-    path: path.resolve(__dirname, '../.env')
-})
+const kafkaConfig = require("../config/config");
 
-const { Kafka } = require('kafkajs');
+const { Kafka } = require("kafkajs");
+
+const clientId = kafkaConfig.kafka.connection.clientId;
+const brokers = kafkaConfig.kafka.connection.brokers;
 
 const kafka = new Kafka({
-  clientId: process.env.KAFKA_CLIENT_ID,
-  brokers: process.env.KAFKA_BROKERS.split(','),
+  clientId,
+  brokers,
 });
 
 module.exports = kafka;

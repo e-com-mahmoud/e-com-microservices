@@ -11,29 +11,29 @@ async function createAddress(req, res) {
     return res.status(StatusCodes.CREATED).send(address);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-async function listUserAddresses(req, res) {
+async function findAllUserAddresses(req, res) {
   const { id } = req.user;
   try {
     const addresses = await addressServices.findAllUserAddresses(id);
     return res.status(StatusCodes.OK).send(addresses);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
 async function getUserAddress(req, res) {
   const { id } = req.params;
   try {
-    const address = await addressServices.findUserExposedAddress(id);
+    const address = await addressServices.getUserAddress(id);
     return res.status(StatusCodes.OK).send(address);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
@@ -44,24 +44,24 @@ async function updateAddress(req, res) {
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
 async function deleteAddress(req, res) {
   const { id } = req.params;
   try {
-    await addressServices.removeAddress(id);
-    res.status(StatusCodes.OK).send();
+    await addressServices.deleteAddress(id);
+    return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
 const controller = {
   createAddress,
-  listUserAddresses,
+  findAllUserAddresses,
   getUserAddress,
   updateAddress,
   deleteAddress,
