@@ -1,17 +1,42 @@
 const express = require("express");
+const router = express.Router();
+
 const controller = require("./controller");
 const {
   checkAvailableCart,
   checkCart,
   checkItem,
+  checkProduct,
 } = require("../../middleware");
-
-const router = express.Router();
+const {
+  createItemValidator,
+  updateItemValidator,
+  idValidator,
+} = require("./validation");
 
 router.post("/", checkAvailableCart, controller.createUserCart);
 router.get("/", checkCart, controller.getCart);
-router.post("/item", checkCart, controller.createItems);
-router.put("/item/:id", checkCart, checkItem, controller.updateItem);
-router.delete("/item/:id", checkCart, checkItem, controller.deleteItem);
+router.post(
+  "/item",
+  createItemValidator,
+  checkProduct,
+  checkCart,
+  controller.createItems,
+);
+router.put(
+  "/item/:id",
+  idValidator,
+  updateItemValidator,
+  checkCart,
+  checkItem,
+  controller.updateItem,
+);
+router.delete(
+  "/item/:id",
+  idValidator,
+  checkCart,
+  checkItem,
+  controller.deleteItem,
+);
 
 module.exports = router;

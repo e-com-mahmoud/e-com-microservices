@@ -24,18 +24,21 @@ async function getCart(userId) {
         [Op.in]: ["NEW", "INCOMPLETE"],
       },
     },
+    include: {
+      model: models.Item,
+    },
   });
 }
 
-async function updateCartStatus(data, id) {
-  return models.Cart.update(data, { where: { id } });
+async function updateCartStatus(data, id, transaction) {
+  return models.Cart.update(data, { where: { id }, transaction });
 }
 
 const services = {
   createUserCart,
   checkAvailableCartMidWare,
   getCart,
-  updateCartStatus
+  updateCartStatus,
 };
 
 module.exports = services;

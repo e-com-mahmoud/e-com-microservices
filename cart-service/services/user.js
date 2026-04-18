@@ -8,14 +8,14 @@ async function findUser(decoded) {
 
 async function createOrFindUser(event) {
   return await models.User.findOrCreate({
-    where: { id: event.payload.id },
+    where: { id: event.id },
     defaults: {
-      createdAt: event.payload.createdAt,
+      createdAt: event.createdAt,
     },
   });
 }
 async function deleteUser(event) {
-  return await models.User.destroy({ where: { id: event.payload.id } });
+  return await models.User.destroy({ where: { id: event.id } });
 }
 
 const userServices = { findUser, createOrFindUser, deleteUser };

@@ -7,6 +7,7 @@ const app = express();
 
 const kafkaConsumers = require("./kafka");
 const config = require("./config/config");
+const { errors } = require("celebrate");
 
 const { port } = config.app;
 
@@ -14,6 +15,7 @@ kafkaConsumers();
 app.use(cors());
 app.use(express.json());
 app.use(routes);
+app.use(errors());
 
 const start = async () => {
   try {

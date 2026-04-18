@@ -1,8 +1,10 @@
 const { userServices } = require("../../services");
+const { createUserValidator, deleteUserValidator } = require("./validation");
 
 async function userCreated(event) {
   try {
-    return userServices.createOrFindUser(event);
+    const validEvent = createUserValidator(event);
+    return userServices.createOrFindUser(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);
@@ -11,7 +13,8 @@ async function userCreated(event) {
 
 async function userDeleted(event) {
   try {
-    return userServices.deleteUser(event);
+    const validEvent = deleteUserValidator(event);
+    return userServices.deleteUser(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);

@@ -1,8 +1,14 @@
 const { productServices } = require("../../services");
+const {
+  createProductValidator,
+  updateProductValidator,
+  deleteProductValidator,
+} = require("./validation");
 
 async function createProduct(event) {
   try {
-    return await productServices.createProduct(event);
+    const validEvent = createProductValidator(event);
+    return await productServices.createProduct(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);
@@ -11,7 +17,8 @@ async function createProduct(event) {
 
 async function updateProduct(event) {
   try {
-    return await productServices.updateProduct(event);
+    const validEvent = updateProductValidator(event);
+    return await productServices.updateProduct(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);
@@ -20,7 +27,8 @@ async function updateProduct(event) {
 
 async function deleteProduct(event) {
   try {
-    return await productServices.deleteProduct(event);
+    const validEvent = deleteProductValidator(event);
+    return await productServices.deleteProduct(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);

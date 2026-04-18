@@ -16,7 +16,7 @@ async function getAllProducts(options) {
   return productDataMapper(result, page);
 }
 
-async function getOneProduct(id) {
+async function getProduct(id) {
   return await models.Product.findOne({
     where: { id },
     attributes: {
@@ -36,7 +36,7 @@ async function deleteProduct(id) {
 const services = {
   createProduct,
   getAllProducts,
-  getOneProduct,
+  getProduct,
   updateProduct,
   deleteProduct,
 };

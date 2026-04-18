@@ -1,7 +1,7 @@
 const models = require("../models");
 
-async function createItems(item) {
-  return models.Item.bulkCreate(item);
+async function createItems(item, transaction) {
+  return models.Item.bulkCreate(item, { transaction });
 }
 
 async function findItem(id) {

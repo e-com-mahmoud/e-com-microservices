@@ -13,22 +13,30 @@ async function createProduct(event) {
     },
   );
 }
+async function getProducts(products) {
+  return await models.Product.findAll({ where: { id: products } });
+}
 
 async function updateProduct(event) {
   return await models.Product.update(
     {
-      title: event.payload.title,
-      price: event.payload.price,
+      title: event.title,
+      price: event.price,
       updatedAt: new Date(),
     },
-    { where: { id: event.payload.id } },
+    { where: { id: event.id } },
   );
 }
 
 async function deleteProduct(event) {
-  return await models.Product.destroy({ where: { id: event.payload.id } });
+  return await models.Product.destroy({ where: { id: event.id } });
 }
 
-const productServices = { createProduct, updateProduct, deleteProduct };
+const productServices = {
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getProducts,
+};
 
 module.exports = productServices;

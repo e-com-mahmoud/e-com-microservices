@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 
 const { cartServices, itemServices } = require("../../services");
+const { sequelize } = require("../../models");
 
 async function createUserCart(req, res) {
   const { id: userId } = req.user;
@@ -25,16 +26,23 @@ async function getCart(req, res) {
 }
 
 async function createItems(req, res) {
+  const transaction = await sequelize.transaction();
   const { id } = req.cart;
   try {
-    await cartServices.updateCartStatus({ status: "INCOMPLETE" }, id);
+    await cartServices.updateCartStatus(
+      { status: "INCOMPLETE" },
+      id,
+      transaction,
+    );
     const items = req.body.map((e) => {
       e.cartId = id;
       return e;
     });
-    await itemServices.createItems(items);
+    await itemServices.createItems(items, transaction);
+    await transaction.commit();
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
+    await transaction.rollback();
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }

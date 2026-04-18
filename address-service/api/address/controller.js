@@ -15,10 +15,10 @@ async function createAddress(req, res) {
   }
 }
 
-async function findAllUserAddresses(req, res) {
+async function findUserAddresses(req, res) {
   const { id } = req.user;
   try {
-    const addresses = await addressServices.findAllUserAddresses(id);
+    const addresses = await addressServices.findUserAddresses(id);
     return res.status(StatusCodes.OK).send(addresses);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -61,7 +61,7 @@ async function deleteAddress(req, res) {
 
 const controller = {
   createAddress,
-  findAllUserAddresses,
+  findUserAddresses,
   getUserAddress,
   updateAddress,
   deleteAddress,

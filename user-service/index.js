@@ -3,8 +3,8 @@ const cors = require("cors");
 
 const db = require("./models");
 const routes = require("./api");
-const { initKafka } = require("./kafka/admin");
 const config = require("./config/config");
+const { errors } = require("celebrate");
 
 const app = express();
 const { port } = config.app;
@@ -12,10 +12,10 @@ const { port } = config.app;
 app.use(cors());
 app.use(express.json());
 app.use(routes);
+app.use(errors());
 
 const start = async () => {
   try {
-    await initKafka();
     await db.sequelize.authenticate();
     console.log("DB connected");
     app.listen(port, () => {

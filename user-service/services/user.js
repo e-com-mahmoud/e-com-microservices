@@ -7,6 +7,9 @@ async function createUser(userDetails) {
 async function findUserByEmail(email) {
   return models.User.findOne({
     where: { email },
+    attributes: {
+      exclude: ["password"],
+    },
   });
 }
 
@@ -43,7 +46,7 @@ const services = {
   findUser,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };
 
 module.exports = services;

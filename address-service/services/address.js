@@ -4,7 +4,7 @@ async function createAddress(data) {
   return models.Address.create(data);
 }
 
-async function findAllUserAddresses(id) {
+async function findUserAddresses(id) {
   return models.Address.findAll({
     where: { userId: id },
     attributes: {
@@ -41,7 +41,7 @@ async function deleteAddress(id) {
 
 const addressServices = {
   createAddress,
-  findAllUserAddresses,
+  findUserAddresses,
   getUserAddress,
   checkAddressUser,
   updateAddress,
