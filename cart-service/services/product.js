@@ -1,7 +1,7 @@
 const models = require("../models");
 
 async function createProduct(event) {
-  return await models.Product.bulkCreate(
+  return models.Product.bulkCreate(
     event.payload.map((p) => ({
       id: p.id,
       title: p.title,
@@ -14,11 +14,11 @@ async function createProduct(event) {
   );
 }
 async function getProducts(products) {
-  return await models.Product.findAll({ where: { id: products } });
+  return models.Product.findAll({ where: { id: products } });
 }
 
 async function updateProduct(event) {
-  return await models.Product.update(
+  return models.Product.update(
     {
       title: event.title,
       price: event.price,
@@ -29,7 +29,7 @@ async function updateProduct(event) {
 }
 
 async function deleteProduct(event) {
-  return await models.Product.destroy({ where: { id: event.id } });
+  return models.Product.destroy({ where: { id: event.id } });
 }
 
 const productServices = {

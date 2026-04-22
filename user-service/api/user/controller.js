@@ -15,10 +15,10 @@ async function createUser(req, res) {
     const { password } = req.body;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     req.body.password = hashedPassword;
-    const user = await userServices.createUser({ ...req.body });
-    const userMap = createUserMapper(user);
+    const createdUser = await userServices.createUser({ ...req.body });
+    const user= createUserMapper(createdUser);
     await kafkaProducer(kafka.producer.topics.USER_CREATED, userMap);
-    const token = tokenGen({ userId: user.id });
+    const token = tokenGen({ userId: createdUser.id });
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
     const errorMessage = e.message || e;
@@ -26,10 +26,10 @@ async function createUser(req, res) {
   }
 }
 
-async function getUser(req, res) {
+async function getUserProfile(req, res) {
   const { id } = req.user;
   try {
-    const user = await userServices.getUser(id);
+    const user = await userServices.getUserProfile(id);
     return res.status(StatusCodes.OK).send(user);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -64,6 +64,6 @@ async function deleteUser(req, res) {
   }
 }
 
-const controller = { createUser, getUser, updateUser, deleteUser };
+const controller = { createUser, getUserProfile, updateUser, deleteUser };
 
 module.exports = controller;

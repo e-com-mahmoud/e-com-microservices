@@ -4,7 +4,7 @@ const models = require("../models");
 const { productDataMapper } = require("../utils");
 
 async function createProduct(productData) {
-  return await models.Product.bulkCreate(productData);
+  return models.Product.bulkCreate(productData);
 }
 
 async function getAllProducts(options) {
@@ -17,7 +17,7 @@ async function getAllProducts(options) {
 }
 
 async function getProduct(id) {
-  return await models.Product.findOne({
+  return models.Product.findOne({
     where: { id },
     attributes: {
       exclude: ["deletedAt", "createdAt", "updatedAt"],
@@ -26,11 +26,11 @@ async function getProduct(id) {
 }
 
 async function updateProduct(data, id) {
-  return await models.Product.update(data, { where: { id } });
+  return models.Product.update(data, { where: { id } });
 }
 
 async function deleteProduct(id) {
-  return await models.Product.destroy({ where: { id } });
+  return models.Product.destroy({ where: { id } });
 }
 
 const services = {

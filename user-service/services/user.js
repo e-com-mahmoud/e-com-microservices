@@ -17,7 +17,7 @@ async function findUser(userId) {
   return models.User.findOne({ where: { id: userId } });
 }
 
-async function getUser(id) {
+async function getUserProfile(id) {
   return models.User.findOne({
     where: { id },
     attributes: {
@@ -44,7 +44,7 @@ const services = {
   createUser,
   findUserByEmail,
   findUser,
-  getUser,
+  getUserProfile,
   updateUser,
   deleteUser,
 };

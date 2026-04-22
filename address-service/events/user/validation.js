@@ -36,9 +36,7 @@ function deleteUserValidator(event) {
   });
   const { error, value } = schema.validate(event.payload);
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
   return value;
 }
 

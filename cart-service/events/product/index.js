@@ -8,7 +8,7 @@ const {
 async function createProduct(event) {
   try {
     const validEvent = createProductValidator(event);
-    return await productServices.createProduct(validEvent);
+    return productServices.createProduct(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);
@@ -18,7 +18,7 @@ async function createProduct(event) {
 async function updateProduct(event) {
   try {
     const validEvent = updateProductValidator(event);
-    return await productServices.updateProduct(validEvent);
+    return productServices.updateProduct(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);
@@ -28,7 +28,7 @@ async function updateProduct(event) {
 async function deleteProduct(event) {
   try {
     const validEvent = deleteProductValidator(event);
-    return await productServices.deleteProduct(validEvent);
+    return productServices.deleteProduct(validEvent);
   } catch (e) {
     const errorMessage = e.message || e;
     throw new Error(errorMessage);

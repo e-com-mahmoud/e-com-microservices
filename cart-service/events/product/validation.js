@@ -5,7 +5,7 @@ function createProductValidator(event) {
     Joi.object().keys({
       category: Joi.string().max(50).required().trim(),
       title: Joi.string().max(50).required().trim(),
-      description: Joi.string().max(50).required().trim(),
+      description: Joi.string().max(2000).required().trim(),
       price: Joi.number().positive().required(),
     }),
   );
@@ -20,7 +20,7 @@ function updateProductValidator(event) {
     .keys({
       category: Joi.string().trim().max(50),
       title: Joi.string().trim().max(50),
-      description: Joi.string().trim().max(50),
+      description: Joi.string().trim().max(2000),
       price: Joi.number().positive(),
     })
     .unknown(true);
@@ -39,9 +39,8 @@ function deleteProductValidator(event) {
     .unknown(true);
   const { error, value } = schema.validate(event.payload);
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  if (error) throw new Error(error.message);
+
   return value;
 }
 

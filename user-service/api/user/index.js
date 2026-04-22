@@ -6,7 +6,7 @@ const { checkEmail, auth } = require("../../middleware");
 const { createUserValidator, updateUserValidator } = require("./validation");
 
 router.post("/", createUserValidator, checkEmail, controller.createUser);
-router.get("/", auth, controller.getUser);
+router.get("/", auth, controller.getUserProfile);
 router.put("/", updateUserValidator, auth, controller.updateUser);
 router.delete("/", auth, controller.deleteUser);
 
