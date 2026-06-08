@@ -26,6 +26,7 @@ async function getCart(userId) {
     },
     include: {
       model: models.Item,
+      include: { model: models.Product },
     },
   });
 }

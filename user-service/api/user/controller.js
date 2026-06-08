@@ -17,7 +17,7 @@ async function createUser(req, res) {
     req.body.password = hashedPassword;
     const createdUser = await userServices.createUser({ ...req.body });
     const user= createUserMapper(createdUser);
-    await kafkaProducer(kafka.producer.topics.USER_CREATED, userMap);
+    await kafkaProducer(kafka.producer.topics.USER_CREATED, user);
     const token = tokenGen({ userId: createdUser.id });
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
