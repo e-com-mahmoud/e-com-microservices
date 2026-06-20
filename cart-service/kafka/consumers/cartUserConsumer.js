@@ -7,8 +7,6 @@ async function runUserConsumer() {
   await consumer.connect();
   await consumer.subscribe({ topic: "user-events", fromBeginning: true });
 
-  console.log("cart Service Kafka consumer running...");
-
   await consumer.run({
     eachMessage: async ({ message }) => {
       try {

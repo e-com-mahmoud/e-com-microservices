@@ -24,6 +24,11 @@ module.exports = {
         USER_DELETED: "USER_DELETED",
       },
     },
+    producers: {
+      ADDRESS_CREATED: "ADDRESS_CREATED",
+      ADDRESS_UPDATED: "ADDRESS_UPDATED",
+      ADDRESS_DELETED: "ADDRESS_DELETED",
+    },
   },
   jwt: {
     secret: process.env.SECRET,

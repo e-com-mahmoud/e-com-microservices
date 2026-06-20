@@ -15,9 +15,9 @@ const config = {
   kafka: {
     connection: {
       clientId: process.env.KAFKA_CLIENT_ID,
-      broker: process.env.KAFKA_BROKERS
-    }
-  }
+      brokers: process.env.KAFKA_BROKERS.split(","),
+    },
+  },
 };
 
 module.exports = config;

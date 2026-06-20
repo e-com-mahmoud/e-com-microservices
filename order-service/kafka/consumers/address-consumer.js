@@ -1,16 +1,16 @@
 const kafka = require("../client");
 const events = require("../../events");
-const consumer = kafka.consumer({ groupId: "address-service-group" });
 
-async function runConsumer() {
+const consumer = kafka.consumer({ groupId: "order-address-service-group" });
+
+async function runAddressConsumer() {
   await consumer.connect();
-  await consumer.subscribe({ topic: "user-events", fromBeginning: true });
+  await consumer.subscribe({ topic: "address-events", fromBeginning: true });
 
   await consumer.run({
     eachMessage: async ({ message }) => {
       try {
         const event = JSON.parse(message.value.toString());
-
         const handler = events[event.type];
         await handler(event);
       } catch (e) {
@@ -19,6 +19,5 @@ async function runConsumer() {
     },
   });
 }
-runConsumer().catch((err) => console.error(err));
 
-module.exports = runConsumer;
+module.exports = runAddressConsumer;

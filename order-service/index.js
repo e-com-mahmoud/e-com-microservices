@@ -2,19 +2,17 @@ const express = require("express");
 const cors = require("cors");
 
 const db = require("./models");
-// const routes = require("./api");
 const app = express();
 
-// const kafkaConsumers = require("./kafka");
+const kafkaConsumers = require("./kafka");
 const config = require("./config/config");
 const { errors } = require("celebrate");
 
 const { port } = config.app;
 
-// kafkaConsumers();
+kafkaConsumers();
 app.use(cors());
 app.use(express.json());
-// app.use(routes);
 app.use(errors());
 
 const start = async () => {
