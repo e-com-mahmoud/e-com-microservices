@@ -54,7 +54,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       status: {
-        type: DataTypes.ENUM("PENDING", "DISPATCHED", "DELIVERED"),
+        type: DataTypes.ENUM(
+          "PENDING",
+          "DISPATCHED",
+          "DELIVERED",
+          "CANCELLED",
+          "REFUNDED",
+        ),
         allowNull: false,
         defaultValue: "PENDING",
       },
@@ -67,7 +73,6 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Order",
       timestamps: true,
-      paranoid: true,
     },
   );
   return Order;

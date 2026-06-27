@@ -1,5 +1,6 @@
 const userEvents = require("./user");
 const productEvents = require("./product");
+const orderEvents = require("./order");
 
 module.exports = { 
   "USER_CREATED": userEvents.userCreated,
@@ -7,4 +8,5 @@ module.exports = {
   "PRODUCT_CREATED": productEvents.createProduct,
   "PRODUCT_UPDATED": productEvents.updateProduct,
   "PRODUCT_DELETED": productEvents.deleteProduct,
+  "ORDER_CREATED": orderEvents.updateCartStatus,
  };

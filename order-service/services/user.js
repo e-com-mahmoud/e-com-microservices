@@ -1,5 +1,11 @@
 const models = require("../models");
 
+async function findUser(decoded) {
+  return models.User.findOne({
+    where: { id: decoded.userId },
+  });
+}
+
 async function findOrCreateUser(event) {
   return models.User.findOrCreate({
     where: { id: event.id },
@@ -28,6 +34,6 @@ async function deleteUser(event) {
   return models.User.destroy({ where: { id: event.id } });
 }
 
-const userServices = { findOrCreateUser, updateUser, deleteUser };
+const userServices = { findUser, findOrCreateUser, updateUser, deleteUser };
 
 module.exports = userServices;

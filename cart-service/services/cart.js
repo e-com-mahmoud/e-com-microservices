@@ -35,11 +35,19 @@ async function updateCartStatus(data, id, transaction) {
   return models.Cart.update(data, { where: { id }, transaction });
 }
 
+async function updateCartStatusEvent(event) {
+  return models.Cart.update(
+    { status: event.status },
+    { where: { id: event.cartId } },
+  );
+}
+
 const services = {
   createUserCart,
   checkAvailableCartMidWare,
   getCart,
   updateCartStatus,
+  updateCartStatusEvent,
 };
 
 module.exports = services;

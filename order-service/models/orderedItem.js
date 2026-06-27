@@ -38,11 +38,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
-      status: {
-        type: DataTypes.ENUM("PENDING", "DISPATCHED", "DELIVERED"),
-        allowNull: false,
-        defaultValue: "PENDING",
-      },
       total: {
         allowNull: false,
         type: DataTypes.DECIMAL(10, 2),

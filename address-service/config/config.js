@@ -32,7 +32,5 @@ module.exports = {
   },
   jwt: {
     secret: process.env.SECRET,
-    expiration: process.env.EXPIRATION,
-    saltRounds: process.env.SALT_ROUNDS,
   },
 };

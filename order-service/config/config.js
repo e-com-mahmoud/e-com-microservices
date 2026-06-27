@@ -17,6 +17,15 @@ const config = {
       clientId: process.env.KAFKA_CLIENT_ID,
       brokers: process.env.KAFKA_BROKERS.split(","),
     },
+    producers: {
+      ORDER_CREATED: "ORDER_CREATED",
+    },
+  },
+  jwt: {
+    secret: process.env.SECRET,
+  },
+  cartClient: {
+    URL: process.env.CART_SERVICE_URL,
   },
 };
 

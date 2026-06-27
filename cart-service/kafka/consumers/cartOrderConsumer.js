@@ -1,11 +1,11 @@
 const kafka = require("../client");
 const events = require("../../events");
 
-const consumer = kafka.consumer({ groupId: "cart-product-service-group" });
+const consumer = kafka.consumer({ groupId: "cart-order-service-group" });
 
-async function runProductConsumer() {
+async function runOrderConsumer() {
   await consumer.connect();
-  await consumer.subscribe({ topic: "product-events", fromBeginning: true });
+  await consumer.subscribe({ topic: "order-events", fromBeginning: true });
 
   await consumer.run({
     eachMessage: async ({ message }) => {
@@ -20,4 +20,4 @@ async function runProductConsumer() {
   });
 }
 
-module.exports = runProductConsumer;
+module.exports = runOrderConsumer;

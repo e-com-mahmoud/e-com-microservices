@@ -143,7 +143,13 @@ module.exports = {
             allowNull: true,
           },
           status: {
-            type: Sequelize.ENUM("PENDING", "DISPATCHED", "DELIVERED"),
+            type: Sequelize.ENUM(
+              "PENDING",
+              "DISPATCHED",
+              "DELIVERED",
+              "CANCELLED",
+              "REFUNDED",
+            ),
             allowNull: false,
             defaultValue: "PENDING",
           },
@@ -198,11 +204,6 @@ module.exports = {
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 1,
-          },
-          status: {
-            type: Sequelize.ENUM("PENDING", "DISPATCHED", "DELIVERED"),
-            allowNull: false,
-            defaultValue: "PENDING",
           },
           total: {
             allowNull: false,

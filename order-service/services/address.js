@@ -13,6 +13,12 @@ async function findOrCreateAddress(event) {
   });
 }
 
+async function findAddress(userId, id) {
+  return models.Address.findOne({
+    where: { id, userId },
+  });
+}
+
 async function updateAddress(event) {
   return models.Address.update(
     {
@@ -31,6 +37,11 @@ async function deleteAddress(event) {
   });
 }
 
-const addressServices = { findOrCreateAddress, updateAddress, deleteAddress };
+const addressServices = {
+  findOrCreateAddress,
+  updateAddress,
+  deleteAddress,
+  findAddress,
+};
 
 module.exports = addressServices;
