@@ -18,11 +18,14 @@ const config = {
       brokers: process.env.KAFKA_BROKERS.split(","),
     },
     producer: {
-      topics: {
-        PRODUCT_CREATED: "PRODUCT_CREATED",
-        PRODUCT_UPDATED: "PRODUCT_UPDATED",
-        PRODUCT_DELETED: "PRODUCT_DELETED",
+      events: {
+        productCreated: "product.created",
+        productUpdated: "product.updated",
+        productDeleted: "product.deleted",
       },
+    },
+    topics: {
+      product: "product-topics",
     },
   },
 };

@@ -1,11 +1,12 @@
 const { StatusCodes } = require("http-status-codes");
 
 const clients = require("../../client");
-const { orderServices } = require("../../services");
+const { orderServices, shipmentServices } = require("../../services");
 const { helpers } = require("../../utils");
 const { sequelize } = require("../../models");
 const { kafkaProducer } = require("../../kafka");
 const { kafka } = require("../../config/config");
+const { cartStatus } = require("../../config/constants");
 
 async function createOrder(req, res, next) {
   const token = req.headers.authorization.split(" ")[1];
@@ -14,18 +15,20 @@ async function createOrder(req, res, next) {
   const transaction = await sequelize.transaction();
   try {
     const cart = await clients.getCart(token);
-    if (cart.Items.length === 0) throw new Error("Cart is Empty");
+    if (!cart.Items.length) throw new Error("Cart is Empty");
     const cartTotal = await helpers.cartTotalMapper(cart);
     const order = await orderServices.createOrder(
       {
         userId,
-        address,
         cartId: cart.id,
         cartTotal,
       },
       { transaction },
     );
-    await orderServices.createOrderedItems(
+    await shipmentServices.createShipment(order.id, address, {
+      transaction,
+    });
+    await orderServices.createOrderItems(
       cart.Items.map((item) => {
         return {
           orderId: order.id,
@@ -39,8 +42,8 @@ async function createOrder(req, res, next) {
       { transaction },
     );
     await transaction.commit();
-    await kafkaProducer(kafka.producers.ORDER_CREATED, {
-      status: "COMPLETED",
+    await kafkaProducer(kafka.producers.orderCreated, {
+      status: cartStatus.COMPLETED,
       cartId: cart.id,
     });
     return res.status(StatusCodes.CREATED).send();
@@ -59,7 +62,7 @@ async function getOrder(req, res, next) {
     postalCode: order.postalCode,
   };
   try {
-    const items = await orderServices.getOrderedItems(order.id);
+    const items = await orderServices.getOrderItems(order.id);
     return res.status(StatusCodes.OK).send({
       order: {
         id: order.id,

@@ -18,17 +18,24 @@ module.exports = {
       brokers: process.env.KAFKA_BROKERS.split(","),
     },
     consumers: {
-      topics: {
-        USER_CREATED: "USER_CREATED",
-        USER_UPDATED: "USER_UPDATED",
-        USER_DELETED: "USER_DELETED",
+      events: {
+        userCreated: "user.created",
+        userUpdated: "user.updated",
+        userDeleted: "user.deleted",
       },
     },
     producers: {
-      ADDRESS_CREATED: "ADDRESS_CREATED",
-      ADDRESS_UPDATED: "ADDRESS_UPDATED",
-      ADDRESS_DELETED: "ADDRESS_DELETED",
+      events: {
+        addressCreated: "address.created",
+        addressUpdated: "address.updated",
+        addressDeleted: "address.deleted",
+      },
     },
+    topics: {
+      address: "address-topics",
+      user: "user-topics",
+    },
+    groupId: "address-group",
   },
   jwt: {
     secret: process.env.SECRET,

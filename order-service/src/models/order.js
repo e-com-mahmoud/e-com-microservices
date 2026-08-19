@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const { orderStatus } = require("../config/constants");
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     static associate(models) {
@@ -11,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "addressId",
         targetKey: "id",
       });
-      Order.hasMany(models.OrderedItem, {
+      Order.hasMany(models.OrderItem, {
+        foreignKey: "orderId",
+        targetKey: "id",
+      });
+      Order.hasMany(models.Shipment, {
         foreignKey: "orderId",
         targetKey: "id",
       });
@@ -29,40 +34,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      addressId: {
-        type: DataTypes.UUID,
-        allowNull: true,
-      },
-      cartId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
-      country: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      city: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      street: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      postalCode: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
       status: {
         type: DataTypes.ENUM(
-          "PENDING",
-          "DISPATCHED",
-          "DELIVERED",
-          "CANCELLED",
-          "REFUNDED",
+          orderStatus.PENDING,
+          orderStatus.DISPATCHED,
+          orderStatus.DELIVERED,
+          orderStatus.CANCELLED,
+          orderStatus.REFUNDED,
         ),
         allowNull: false,
-        defaultValue: "PENDING",
+        defaultValue: orderStatus.PENDING,
       },
       total: {
         allowNull: false,

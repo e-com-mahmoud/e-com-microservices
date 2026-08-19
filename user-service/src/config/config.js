@@ -1,3 +1,5 @@
+const events = require("../../../cart-service/src/events");
+
 require("dotenv").config();
 const config = {
   app: {
@@ -18,11 +20,14 @@ const config = {
       brokers: process.env.KAFKA_BROKERS.split(","),
     },
     producer: {
-      topics: {
-        USER_CREATED: "USER_CREATED",
-        USER_UPDATED: "USER_UPDATED",
-        USER_DELETED: "USER_DELETED",
+      events: {
+        userCreated: "user.created",
+        userUpdated: "user.updated",
+        userDeleted: "user.deleted",
       },
+    },
+    topics: {
+      user: "user-topics",
     },
   },
   jwt: {

@@ -18,8 +18,16 @@ const config = {
       brokers: process.env.KAFKA_BROKERS.split(","),
     },
     producers: {
-      ORDER_CREATED: "ORDER_CREATED",
+      events: {
+        orderCreated: "order.created",
+      },
     },
+    topics: {
+      address: "address-topics",
+      user: "user-topics",
+      order: "order-topics",
+    },
+    groupId: "order-group",
   },
   jwt: {
     secret: process.env.SECRET,

@@ -17,15 +17,12 @@ const config = {
       clientId: process.env.KAFKA_CLIENT_ID,
       brokers: process.env.KAFKA_BROKERS.split(","),
     },
-    consumers: {
-      topics: {
-        PRODUCT_CREATED: "PRODUCT_CREATED",
-        PRODUCT_UPDATED: "PRODUCT_UPDATED",
-        PRODUCT_DELETED: "PRODUCT_DELETED",
-        USER_CREATED: "USER_CREATED",
-        USER_DELETED: "USER_DELETED",
-      },
+    topics: {
+      user: "user-topics",
+      product: "product-topics",
+      order: "order-topics",
     },
+    groupId: "cart-group",
   },
   jwt: {
     secret: process.env.SECRET,

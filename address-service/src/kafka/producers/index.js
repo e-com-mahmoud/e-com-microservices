@@ -1,4 +1,5 @@
 const kafka = require("../client");
+const { kafka: kafkaConfig } = require("../../config/config");
 
 const producer = kafka.producer({
   allowAutoTopicCreation: false,
@@ -12,7 +13,7 @@ async function produceEvent(type, payload) {
   try {
     await producer.connect();
     await producer.send({
-      topic: "address-topics",
+      topic: kafkaConfig.topics.address,
       messages: [
         {
           key: payload.id,

@@ -17,7 +17,7 @@ async function createUser(req, res, next) {
     req.body.password = hashedPassword;
     const createdUser = await userServices.createUser({ ...req.body });
     const user = createUserMapper(createdUser);
-    await kafkaProducer(kafka.producer.topics.USER_CREATED, user);
+    await kafkaProducer(kafka.producer.events.userCreated, user);
     const token = tokenGen({ userId: createdUser.id });
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
@@ -39,7 +39,7 @@ async function updateUser(req, res, next) {
   const { id } = req.user;
   try {
     await userServices.updateUser({ ...req.body }, id);
-    await kafkaProducer(kafka.producer.topics.USER_UPDATED, {
+    await kafkaProducer(kafka.producer.events.userUpdated, {
       ...req.body,
       id,
     });
@@ -53,7 +53,7 @@ async function deleteUser(req, res, next) {
   const { id } = req.user;
   try {
     await userServices.deleteUser(id);
-    await kafkaProducer(kafka.producer.topics.USER_DELETED, { id });
+    await kafkaProducer(kafka.producer.events.userDeleted, { id });
     return res.status(StatusCodes.OK).send("deleted");
   } catch (e) {
     next(e);

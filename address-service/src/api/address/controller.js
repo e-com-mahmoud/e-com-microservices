@@ -10,7 +10,7 @@ async function createAddress(req, res, next) {
       ...req.body,
       userId: id,
     });
-    await kafkaProducer(kafka.producers.ADDRESS_CREATED, address);
+    await kafkaProducer(kafka.producers.events.addressCreated, address);
     return res.status(StatusCodes.CREATED).send(address);
   } catch (e) {
     next(e);
@@ -41,7 +41,7 @@ async function updateAddress(req, res, next) {
   const { id } = req.params;
   try {
     const address = await addressServices.updateAddress({ ...req.body }, id);
-    await kafkaProducer(kafka.producers.ADDRESS_UPDATED, {
+    await kafkaProducer(kafka.producers.events.addressUpdated, {
       ...req.body,
       id,
     });
@@ -55,7 +55,7 @@ async function deleteAddress(req, res, next) {
   const { id } = req.params;
   try {
     await addressServices.deleteAddress(id);
-    await kafkaProducer(kafka.producers.ADDRESS_DELETED, { id });
+    await kafkaProducer(kafka.producers.events.addressDeleted, { id });
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     next(e);

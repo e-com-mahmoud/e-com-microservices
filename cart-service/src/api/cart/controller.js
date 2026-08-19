@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 
 const { cartServices, itemServices } = require("../../services");
 const { sequelize } = require("../../models");
+const { status } = require("../../config/constants");
 
 async function createUserCart(req, res, next) {
   const { id: userId } = req.user;
@@ -9,7 +10,7 @@ async function createUserCart(req, res, next) {
     const cart = await cartServices.createUserCart({ userId });
     return res.status(StatusCodes.CREATED).send(cart);
   } catch (e) {
-    next(e)
+    next(e);
   }
 }
 
@@ -19,7 +20,7 @@ async function getCart(req, res, next) {
     const cart = await cartServices.getCart(id);
     return res.status(StatusCodes.OK).send(cart);
   } catch (e) {
-    next(e)
+    next(e);
   }
 }
 
@@ -28,7 +29,7 @@ async function createItems(req, res, next) {
   const { id } = req.cart;
   try {
     await cartServices.updateCartStatus(
-      { status: "INCOMPLETE" },
+      { status: status.INCOMPLETE },
       id,
       transaction,
     );
@@ -41,7 +42,7 @@ async function createItems(req, res, next) {
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     await transaction.rollback();
-    next(e)
+    next(e);
   }
 }
 
@@ -52,7 +53,7 @@ async function updateItem(req, res, next) {
     const item = await itemServices.updateItemQuantity(quantity, id);
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
-    next(e)
+    next(e);
   }
 }
 
@@ -62,7 +63,7 @@ async function deleteItem(req, res, next) {
     const item = await itemServices.deleteItem(id);
     return res.status(StatusCodes.OK).send("deleted");
   } catch (e) {
-    next(e)
+    next(e);
   }
 }
 

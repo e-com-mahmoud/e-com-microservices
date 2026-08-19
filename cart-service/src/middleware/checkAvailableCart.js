@@ -1,5 +1,5 @@
-const { StatusCodes } = require('http-status-codes');
-const { cartServices } = require('../services');
+const { StatusCodes } = require("http-status-codes");
+const { cartServices } = require("../services");
 
 async function checkAvailableCart(req, res, next) {
   const { id: userId } = req.user;

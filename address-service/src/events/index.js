@@ -1,7 +1,7 @@
-const events = require('./user');
+const events = require("./user");
 
 module.exports = {
-  "USER_CREATED": events.userCreated,
-  "USER_UPDATED": events.userUpdated,
-  "USER_DELETED": events.userDeleted,
-}
+  "user.created": events.userCreated,
+  "user.updated": events.userUpdated,
+  "user.deleted": events.userDeleted,
+};

@@ -1,5 +1,7 @@
-const models = require("../models");
 const { Op } = require("sequelize");
+
+const models = require("../models");
+const { status } = require("../config/constants");
 
 async function createUserCart(data) {
   return models.Cart.create(data);
@@ -10,7 +12,7 @@ async function checkAvailableCartMidWare(userId) {
     where: {
       userId,
       status: {
-        [Op.in]: ["NEW", "INCOMPLETE"],
+        [Op.in]: [status.NEW, status.INCOMPLETE],
       },
     },
   });
@@ -21,7 +23,7 @@ async function getCart(userId) {
     where: {
       userId,
       status: {
-        [Op.in]: ["NEW", "INCOMPLETE"],
+        [Op.in]: [status.NEW, status.INCOMPLETE],
       },
     },
     include: {
@@ -35,9 +37,9 @@ async function updateCartStatus(data, id, transaction) {
   return models.Cart.update(data, { where: { id }, transaction });
 }
 
-async function updateCartStatusEvent(event) {
+async function updateCartStatusEvent() {
   return models.Cart.update(
-    { status: event.status },
+    { status: status.COMPLETED },
     { where: { id: event.cartId } },
   );
 }

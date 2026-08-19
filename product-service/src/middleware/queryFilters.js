@@ -35,4 +35,4 @@ async function queryFilters(req, res, next) {
   }
 }
 
-module.exports = queryFilters ;
+module.exports = queryFilters;

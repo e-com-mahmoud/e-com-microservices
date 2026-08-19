@@ -9,7 +9,7 @@ async function createProduct(req, res, next) {
   try {
     const products = await productServices.createProduct([...req.body]);
     const productsMap = await createProductEventMapper(products);
-    await kafkaProducer(kafka.producer.topics.PRODUCT_CREATED, productsMap);
+    await kafkaProducer(kafka.producer.events.productCreated, productsMap);
     return res.status(StatusCodes.CREATED).send(products);
   } catch (e) {
     next(e);
@@ -46,7 +46,7 @@ async function updateProduct(req, res, next) {
   const { id } = req.params;
   try {
     const product = await productServices.updateProduct({ ...req.body }, id);
-    await kafkaProducer(kafka.producer.topics.PRODUCT_UPDATED, {
+    await kafkaProducer(kafka.producer.events.productUpdated, {
       ...req.body,
       id,
     });
@@ -61,7 +61,7 @@ async function deleteProduct(req, res, next) {
   const { id } = req.params;
   try {
     const product = await productServices.deleteProduct(id);
-    await kafkaProducer(kafka.producer.topics.PRODUCT_DELETED, { id });
+    await kafkaProducer(kafka.producer.events.productDeleted, { id });
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     next(e);

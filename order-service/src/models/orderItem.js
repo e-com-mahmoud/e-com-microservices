@@ -1,15 +1,15 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class OrderedItem extends Model {
+  class OrderItem extends Model {
     static associate(models) {
-      OrderedItem.belongsTo(models.Order, {
+      OrderItem.belongsTo(models.Order, {
         foreignKey: "orderId",
         targetKey: "id",
       });
     }
   }
-  OrderedItem.init(
+  OrderItem.init(
     {
       id: {
         allowNull: false,
@@ -38,17 +38,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
-      total: {
-        allowNull: false,
-        type: DataTypes.DECIMAL(10, 2),
-      },
     },
     {
       sequelize,
-      modelName: "OrderedItem",
+      modelName: "OrderItem",
       timestamps: true,
       paranoid: true,
     },
   );
-  return OrderedItem;
+  return OrderItem;
 };

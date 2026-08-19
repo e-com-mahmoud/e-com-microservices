@@ -2,11 +2,11 @@ const userEvents = require("./user");
 const productEvents = require("./product");
 const orderEvents = require("./order");
 
-module.exports = { 
-  "USER_CREATED": userEvents.userCreated,
-  "USER_DELETED": userEvents.userDeleted,
-  "PRODUCT_CREATED": productEvents.createProduct,
-  "PRODUCT_UPDATED": productEvents.updateProduct,
-  "PRODUCT_DELETED": productEvents.deleteProduct,
-  "ORDER_CREATED": orderEvents.updateCartStatus,
- };
+module.exports = {
+  "user.created": userEvents.userCreated,
+  "user.deleted": userEvents.userDeleted,
+  "product.created": productEvents.createProduct,
+  "product.updated": productEvents.updateProduct,
+  "product.deleted": productEvents.deleteProduct,
+  "order.updated": orderEvents.updateCartStatus,
+};

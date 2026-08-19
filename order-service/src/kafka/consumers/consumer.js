@@ -1,11 +1,17 @@
 const kafka = require("../client");
 const events = require("../../events");
+const { kafka: kafkaConfig } = require("../../config/config");
 
-const consumer = kafka.consumer({ groupId: "order-address-service-group" });
+const consumer = kafka.consumer({ groupId: kafkaConfig.groupId });
 
-async function runAddressConsumer() {
+const topics = kafkaConfig.topics;
+
+async function runConsumer() {
   await consumer.connect();
-  await consumer.subscribe({ topic: "address-topics", fromBeginning: true });
+  await consumer.subscribe({
+    topics: [topics.user, topics.address],
+    fromBeginning: true,
+  });
 
   await consumer.run({
     eachMessage: async ({ message }) => {
@@ -20,4 +26,4 @@ async function runAddressConsumer() {
   });
 }
 
-module.exports = runAddressConsumer;
+module.exports = runConsumer;

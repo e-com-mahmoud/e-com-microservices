@@ -5,19 +5,14 @@ async function createOrder(order, options = {}) {
     {
       userId: order.userId,
       cartId: order.cartId,
-      addressId: order.address.id,
-      country: order.address.country,
-      city: order.address.city,
-      street: order.address.street,
-      postalCode: order.address.postalCode,
       total: order.cartTotal,
     },
     options,
   );
 }
 
-async function createOrderedItems(order, options = {}) {
-  return models.OrderedItem.bulkCreate(order, options);
+async function createOrderItems(order, options = {}) {
+  return models.OrderItem.bulkCreate(order, options);
 }
 
 async function getOrder(id, userId) {
@@ -26,8 +21,8 @@ async function getOrder(id, userId) {
   });
 }
 
-async function getOrderedItems(orderId) {
-  return models.OrderedItem.findAll({
+async function getOrderItems(orderId) {
+  return models.OrderItem.findAll({
     where: { orderId },
     attributes: {
       exclude: [
@@ -48,10 +43,10 @@ async function updateOrderStatus(data, id) {
 
 const orderServices = {
   createOrder,
-  createOrderedItems,
+  createOrderItems,
   getOrder,
   updateOrderStatus,
-  getOrderedItems,
+  getOrderItems,
 };
 
 module.exports = orderServices;

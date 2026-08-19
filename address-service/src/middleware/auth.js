@@ -8,14 +8,25 @@ const secret = jwtConfig.jwt.secret;
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
+    const authHeader = req.header("Authorization");
+    if (!authHeader) {
+      throw new Error("Authorization header is required");
+    }
+    if (!authHeader.startsWith("Bearer ")) {
+      throw new Error("Invalid authorization format");
+    }
+    const token = authHeader.replace("Bearer ", "");
+    if (!token) {
+      throw new Error("Authorization token is required");
+    }
     const decoded = jwt.verify(token, secret);
     const user = await userServices.findUser(decoded);
-
-    if (!user) throw new Error("Not authorized");
-    req.token = decoded;
+    if (!user) {
+      throw new Error("User not found");
+    }
+    req.token = token;
     req.user = user;
-    return next();
+    next();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.UNAUTHORIZED).send(errorMessage);

@@ -1,11 +1,15 @@
 "use strict";
 const { Model } = require("sequelize");
-const { roles } = require("../config/constants");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    static associate(models) {}
+  class Shipment extends Model {
+    static associate(models) {
+      Shipment.belongsTo(models.Order, {
+        foreignKey: "orderId",
+        targetKey: "id",
+      });
+    }
   }
-  User.init(
+  Shipment.init(
     {
       id: {
         allowNull: false,
@@ -13,34 +17,32 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
+      orderId: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
-      name: {
+      country: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      phoneNumber: {
+      city: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      role: {
-        type: DataTypes.ENUM(roles.USER, roles.ADMIN),
-        defaultValue: roles.USER,
+      street: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      postalCode: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: "Shipment",
       timestamps: true,
-      paranoid: true,
     },
   );
-  return User;
+  return Shipment;
 };

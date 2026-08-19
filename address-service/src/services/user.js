@@ -31,7 +31,7 @@ async function updateUser(event) {
 }
 
 async function deleteUser(event) {
-  return models.User.destroy({ where: { id: event.id }})
+  return models.User.destroy({ where: { id: event.id } });
 }
 
 const userServices = { findUser, createOrFindUser, updateUser, deleteUser };

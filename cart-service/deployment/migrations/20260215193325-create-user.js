@@ -10,7 +10,6 @@ module.exports = {
             allowNull: false,
             primaryKey: true,
             type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
           },
           createdAt: {
             allowNull: false,
@@ -34,7 +33,6 @@ module.exports = {
             allowNull: false,
             primaryKey: true,
             type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
           },
           title: {
             type: Sequelize.STRING,
@@ -150,10 +148,10 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     return queryInterface.sequelize.transaction(async (transaction) => {
-      await queryInterface.dropTable("Users");
-      await queryInterface.dropTable("Products");
-      await queryInterface.dropTable("Carts");
-      await queryInterface.dropTable("Items");
+      await queryInterface.dropTable("Items", { transaction });
+      await queryInterface.dropTable("Carts", { transaction });
+      await queryInterface.dropTable("Products", { transaction });
+      await queryInterface.dropTable("Users", { transaction });
     });
   },
 };

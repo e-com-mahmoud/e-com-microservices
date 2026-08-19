@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+
+const { status } = require("../config/constants");
 module.exports = (sequelize, DataTypes) => {
   class Cart extends Model {
     static associate(models) {
@@ -26,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM("NEW", "INCOMPLETE", "COMPLETED"),
+        type: DataTypes.ENUM(status.NEW, status.INCOMPLETE, status.COMPLETED),
         allowNull: false,
-        defaultValue: "NEW",
+        defaultValue: status.NEW,
       },
       createdAt: {
         allowNull: false,

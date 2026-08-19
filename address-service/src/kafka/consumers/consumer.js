@@ -1,10 +1,15 @@
 const kafka = require("../client");
 const events = require("../../events");
-const consumer = kafka.consumer({ groupId: "address-service-group" });
+const { kafka: kafkaConfig } = require("../../config/config");
+
+const consumer = kafka.consumer({ groupId: kafkaConfig.groupId });
 
 async function runConsumer() {
   await consumer.connect();
-  await consumer.subscribe({ topic: "user-topics", fromBeginning: true });
+  await consumer.subscribe({
+    topic: kafkaConfig.topics.user,
+    fromBeginning: true,
+  });
 
   await consumer.run({
     eachMessage: async ({ message }) => {

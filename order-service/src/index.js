@@ -5,14 +5,14 @@ const db = require("./models");
 const routes = require("./api");
 const app = express();
 
-const { runConsumers } = require("./kafka");
+const { runConsumer } = require("./kafka");
 const config = require("./config/config");
 const { errors } = require("celebrate");
 const { errorHandler } = require("./middleware");
 
 const { port } = config.app;
 
-runConsumers();
+runConsumer();
 app.use(cors());
 app.use(express.json());
 app.use(routes);

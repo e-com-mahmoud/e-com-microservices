@@ -10,7 +10,6 @@ module.exports = {
             allowNull: false,
             primaryKey: true,
             type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
           },
           email: {
             allowNull: false,
@@ -47,7 +46,6 @@ module.exports = {
             allowNull: false,
             primaryKey: true,
             type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
           },
           userId: {
             type: Sequelize.UUID,
@@ -115,33 +113,6 @@ module.exports = {
             allowNull: false,
             type: Sequelize.UUID,
           },
-          addressId: {
-            type: Sequelize.UUID,
-            references: {
-              model: {
-                tableName: "Addresses",
-              },
-              key: "id",
-            },
-            onUpdate: "CASCADE",
-            onDelete: "SET NULL",
-          },
-          country: {
-            type: Sequelize.STRING,
-            allowNull: false,
-          },
-          city: {
-            type: Sequelize.STRING,
-            allowNull: false,
-          },
-          street: {
-            type: Sequelize.STRING,
-            allowNull: false,
-          },
-          postalCode: {
-            type: Sequelize.STRING,
-            allowNull: true,
-          },
           status: {
             type: Sequelize.ENUM(
               "PENDING",
@@ -169,7 +140,52 @@ module.exports = {
         { transaction },
       );
       await queryInterface.createTable(
-        "OrderedItems",
+        "Shipments",
+        {
+          id: {
+            allowNull: false,
+            primaryKey: true,
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+          },
+          orderId: {
+            type: Sequelize.UUID,
+            allowNull: false,
+            unique: true,
+            references: {
+              model: {
+                tableName: "Orders",
+              },
+              key: "id",
+            },
+            onUpdate: "CASCADE",
+            onDelete: "CASCADE",
+          },
+          country: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          city: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          street: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          postalCode: {
+            type: Sequelize.STRING,
+            allowNull: true,
+          },
+          createdAt: {
+            allowNull: false,
+            type: Sequelize.DATE,
+          },
+        },
+        { transaction },
+      );
+      await queryInterface.createTable(
+        "OrderItems",
         {
           id: {
             allowNull: false,
@@ -205,10 +221,6 @@ module.exports = {
             allowNull: false,
             defaultValue: 1,
           },
-          total: {
-            allowNull: false,
-            type: Sequelize.DECIMAL(10, 2),
-          },
           createdAt: {
             allowNull: false,
             type: Sequelize.DATE,
@@ -228,10 +240,11 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     return queryInterface.sequelize.transaction(async (transaction) => {
-      await queryInterface.dropTable("Users");
-      await queryInterface.dropTable("Addresses");
-      await queryInterface.dropTable("Orders");
-      await queryInterface.dropTable("OrderedItems");
+      await queryInterface.dropTable("OrderItems", { transaction });
+      await queryInterface.dropTable("Shipments", { transaction });
+      await queryInterface.dropTable("Orders", { transaction });
+      await queryInterface.dropTable("Addresses", { transaction });
+      await queryInterface.dropTable("Users", { transaction });
     });
   },
 };

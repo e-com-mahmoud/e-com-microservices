@@ -37,7 +37,7 @@
       "type": "node",
       "request": "launch",
       "name": "Order Service",
-      "program": "${workspaceFolder}/order-service/index.js",
+      "program": "${workspaceFolder}/order-service/src/index.js",
       "cwd": "${workspaceFolder}/order-service",
       "skipFiles": ["<node_internals>/**"]
     }
