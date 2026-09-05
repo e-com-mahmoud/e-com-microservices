@@ -1,7 +1,7 @@
 const models = require("../models");
 
-async function createShipment(orderId, address, options = {}) {
-  return models.Shipment.create(orderId, address, options);
+async function createShipment(data, options = {}) {
+  return models.Shipment.create(data, options);
 }
 
 const services = { createShipment };

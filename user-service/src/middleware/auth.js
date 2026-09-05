@@ -19,7 +19,7 @@ const auth = async (req, res, next) => {
       throw new Error("Authorization token is required");
     }
     const decoded = jwt.verify(token, secret);
-    const user = await userServices.findUser(decoded);
+    const user = await userServices.findUser(decoded.userId);
     if (!user) {
       throw new Error("User not found");
     }

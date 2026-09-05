@@ -3,8 +3,8 @@ const models = require("../models");
 
 const { productDataMapper } = require("../utils");
 
-async function createProduct(productData) {
-  return models.Product.bulkCreate(productData);
+async function createProduct(productData, options = {}) {
+  return models.Product.bulkCreate(productData, options);
 }
 
 async function getAllProducts(options) {
@@ -25,12 +25,12 @@ async function getProduct(id) {
   });
 }
 
-async function updateProduct(data, id) {
-  return models.Product.update(data, { where: { id } });
+async function updateProduct(data, id, options = {}) {
+  return models.Product.update(data, { where: { id } }, options);
 }
 
-async function deleteProduct(id) {
-  return models.Product.destroy({ where: { id } });
+async function deleteProduct(id, options = {}) {
+  return models.Product.destroy({ where: { id } }, options);
 }
 
 const services = {

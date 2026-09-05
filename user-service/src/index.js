@@ -6,6 +6,7 @@ const routes = require("./api");
 const config = require("./config/config");
 const { errors } = require("celebrate");
 const { errorHandler } = require("./middleware");
+const { publishOutbox } = require("./kafka");
 
 const app = express();
 const { port } = config.app;
@@ -20,6 +21,7 @@ const start = async () => {
   try {
     await db.sequelize.authenticate();
     console.log("DB connected");
+    publishOutbox();
     app.listen(port, () => {
       console.log("sever is up on port " + port);
     });

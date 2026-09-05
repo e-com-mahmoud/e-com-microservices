@@ -1,10 +1,13 @@
 const { StatusCodes } = require("http-status-codes");
 
 const clients = require("../../client");
-const { orderServices, shipmentServices } = require("../../services");
+const {
+  orderServices,
+  shipmentServices,
+  outboxServices,
+} = require("../../services");
 const { helpers } = require("../../utils");
 const { sequelize } = require("../../models");
-const { kafkaProducer } = require("../../kafka");
 const { kafka } = require("../../config/config");
 const { cartStatus } = require("../../config/constants");
 
@@ -25,9 +28,10 @@ async function createOrder(req, res, next) {
       },
       { transaction },
     );
-    await shipmentServices.createShipment(order.id, address, {
-      transaction,
-    });
+    await shipmentServices.createShipment(
+      { ...address, orderId: order.id },
+      { transaction },
+    );
     await orderServices.createOrderItems(
       cart.Items.map((item) => {
         return {
@@ -41,11 +45,15 @@ async function createOrder(req, res, next) {
       }),
       { transaction },
     );
+    await outboxServices.createOutbox(
+      kafka.producers.events.orderCreated,
+      {
+        status: cartStatus.COMPLETED,
+        cartId: cart.id,
+      },
+      { transaction },
+    );
     await transaction.commit();
-    await kafkaProducer(kafka.producers.orderCreated, {
-      status: cartStatus.COMPLETED,
-      cartId: cart.id,
-    });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     await transaction.rollback();

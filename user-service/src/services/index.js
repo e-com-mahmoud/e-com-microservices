@@ -1,3 +1,4 @@
 const userServices = require("./user");
+const outboxServices = require("./outbox");
 
-module.exports = { userServices };
+module.exports = { userServices, outboxServices };

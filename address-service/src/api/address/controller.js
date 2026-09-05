@@ -1,18 +1,28 @@
 const { StatusCodes } = require("http-status-codes");
-const { addressServices } = require("../../services");
-const kafkaProducer = require("../../kafka");
+const { addressServices, outboxServices } = require("../../services");
 const { kafka } = require("../../config/config");
+const { sequelize } = require("../../models");
 
 async function createAddress(req, res, next) {
   const { id } = req.user;
+  const transaction = await sequelize.transaction();
   try {
-    const address = await addressServices.createAddress({
-      ...req.body,
-      userId: id,
-    });
-    await kafkaProducer(kafka.producers.events.addressCreated, address);
+    const address = await addressServices.createAddress(
+      {
+        ...req.body,
+        userId: id,
+      },
+      { transaction },
+    );
+    await outboxServices.createOutbox(
+      kafka.producers.events.addressCreated,
+      address,
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.CREATED).send(address);
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }
@@ -39,25 +49,36 @@ async function getUserAddress(req, res, next) {
 
 async function updateAddress(req, res, next) {
   const { id } = req.params;
+  const transaction = await sequelize.transaction();
   try {
     const address = await addressServices.updateAddress({ ...req.body }, id);
-    await kafkaProducer(kafka.producers.events.addressUpdated, {
-      ...req.body,
-      id,
-    });
+    await outboxServices.createOutbox(
+      kafka.producers.events.addressUpdated,
+      { ...req.body, id },
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }
 
 async function deleteAddress(req, res, next) {
   const { id } = req.params;
+  const transaction = await sequelize.transaction();
   try {
-    await addressServices.deleteAddress(id);
-    await kafkaProducer(kafka.producers.events.addressDeleted, { id });
+    await addressServices.deleteAddress(id, { transaction });
+    await outboxServices.createOutbox(
+      kafka.producers.events.addressDeleted,
+      { id },
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.OK).send();
   } catch (e) {
+    transaction.rollback();
     next(e);
   }
 }

@@ -3,10 +3,6 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Address extends Model {
     static associate(models) {
-      Address.hasMany(models.Order, {
-        foreignKey: "addressId",
-        targetKey: "id",
-      });
       Address.belongsTo(models.User, {
         foreignKey: "userId",
         targetKey: "id",

@@ -1,3 +1,4 @@
+const { raw } = require("express");
 const models = require("../models");
 
 async function findOrCreateAddress(event) {
@@ -16,6 +17,7 @@ async function findOrCreateAddress(event) {
 async function findAddress(userId, id) {
   return models.Address.findOne({
     where: { id, userId },
+    raw: true,
   });
 }
 

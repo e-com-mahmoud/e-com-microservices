@@ -1,3 +1,4 @@
-const kafkaProducer = require("./producers");
+const produceEvent = require("./producers");
+const publishOutbox = require("./outboxPublisher");
 
-module.exports = kafkaProducer;
+module.exports = { produceEvent, publishOutbox };

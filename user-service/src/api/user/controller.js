@@ -1,8 +1,8 @@
 const { StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcrypt");
-const kafkaProducer = require("../../kafka/producers/producer");
+const { sequelize } = require("../../models");
 
-const { userServices } = require("../../services");
+const { userServices, outboxServices } = require("../../services");
 const tokenGen = require("../../utils/token");
 const { jwt } = require("../../config/config");
 const { kafka } = require("../../config/config");
@@ -11,16 +11,24 @@ const { createUserMapper } = require("../../utils/create.userMapper");
 const saltRounds = Number(jwt.saltRounds);
 
 async function createUser(req, res, next) {
+  const transaction = await sequelize.transaction();
   try {
     const { password } = req.body;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     req.body.password = hashedPassword;
-    const createdUser = await userServices.createUser({ ...req.body });
+    const createdUser = await userServices.createUser(
+      { ...req.body },
+      { transaction },
+    );
     const user = createUserMapper(createdUser);
-    await kafkaProducer(kafka.producer.events.userCreated, user);
+    await outboxServices.createOutbox(kafka.producer.events.userCreated, user, {
+      transaction,
+    });
     const token = tokenGen({ userId: createdUser.id });
+    await transaction.commit();
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }
@@ -37,25 +45,36 @@ async function getUserProfile(req, res, next) {
 
 async function updateUser(req, res, next) {
   const { id } = req.user;
+  const transaction = await sequelize.transaction();
   try {
-    await userServices.updateUser({ ...req.body }, id);
-    await kafkaProducer(kafka.producer.events.userUpdated, {
-      ...req.body,
-      id,
-    });
+    await userServices.updateUser({ ...req.body }, id, { transaction });
+    await outboxServices.createOutbox(
+      kafka.producer.events.userUpdated,
+      { ...req.body, id },
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }
 
 async function deleteUser(req, res, next) {
   const { id } = req.user;
+  const transaction = await sequelize.transaction();
   try {
-    await userServices.deleteUser(id);
-    await kafkaProducer(kafka.producer.events.userDeleted, { id });
+    await userServices.deleteUser(id, { transaction });
+    await outboxServices.createOutbox(
+      kafka.producer.events.userDeleted,
+      { id },
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.OK).send("deleted");
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }

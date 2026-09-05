@@ -1,15 +1,10 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Shipment extends Model {
-    static associate(models) {
-      Shipment.belongsTo(models.Order, {
-        foreignKey: "orderId",
-        targetKey: "id",
-      });
-    }
+  class Outbox extends Model {
+    static associate(models) {}
   }
-  Shipment.init(
+  Outbox.init(
     {
       id: {
         allowNull: false,
@@ -17,24 +12,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      orderId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
-      country: {
+      eventType: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      city: {
-        type: DataTypes.STRING,
+      payload: {
+        type: DataTypes.JSON,
         allowNull: false,
       },
-      street: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      postalCode: {
-        type: DataTypes.STRING,
+      publishedAt: {
+        type: DataTypes.DATE,
         allowNull: true,
       },
       createdAt: {
@@ -45,9 +32,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Shipment",
+      modelName: "Outbox",
       timestamps: false,
     },
   );
-  return Shipment;
+  return Outbox;
 };

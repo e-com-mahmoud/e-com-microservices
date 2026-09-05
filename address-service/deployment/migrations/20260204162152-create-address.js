@@ -90,10 +90,40 @@ module.exports = {
         },
         { transaction },
       );
+      await queryInterface.createTable(
+        "Outboxes",
+        {
+          id: {
+            allowNull: false,
+            primaryKey: true,
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+          },
+          eventType: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          payload: {
+            type: Sequelize.JSON,
+            allowNull: false,
+          },
+          publishedAt: {
+            type: Sequelize.DATE,
+            allowNull: true,
+          },
+          createdAt: {
+            allowNull: false,
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+          },
+        },
+        { transaction },
+      );
     });
   },
   async down(queryInterface, Sequelize) {
     return queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.dropTable("Outboxes", { transaction });
       await queryInterface.dropTable("Addresses", { transaction });
       await queryInterface.dropTable("Users", { transaction });
     });

@@ -1,11 +1,11 @@
 const models = require("../models");
 
-async function createOrder(order, options = {}) {
+async function createOrder(data, options = {}) {
   return models.Order.create(
     {
-      userId: order.userId,
-      cartId: order.cartId,
-      total: order.cartTotal,
+      userId: data.userId,
+      cartId: data.cartId,
+      total: data.cartTotal,
     },
     options,
   );

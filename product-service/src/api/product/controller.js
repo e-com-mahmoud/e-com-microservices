@@ -1,17 +1,26 @@
 const { StatusCodes } = require("http-status-codes");
 
-const { productServices } = require("../../services");
-const kafkaProducer = require("../../kafka");
+const { productServices, outboxServices } = require("../../services");
+const { sequelize } = require("../../models");
 const { kafka } = require("../../config/config");
 const { createProductEventMapper } = require("../../utils");
 
 async function createProduct(req, res, next) {
+  const transaction = await sequelize.transaction();
   try {
-    const products = await productServices.createProduct([...req.body]);
+    const products = await productServices.createProduct([...req.body], {
+      transaction,
+    });
     const productsMap = await createProductEventMapper(products);
-    await kafkaProducer(kafka.producer.events.productCreated, productsMap);
+    await outboxServices.createOutbox(
+      kafka.producer.events.productCreated,
+      productsMap,
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.CREATED).send(products);
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }
@@ -44,26 +53,38 @@ async function getOneProduct(req, res, next) {
 
 async function updateProduct(req, res, next) {
   const { id } = req.params;
+  const transaction = await sequelize.transaction();
   try {
-    const product = await productServices.updateProduct({ ...req.body }, id);
-    await kafkaProducer(kafka.producer.events.productUpdated, {
-      ...req.body,
-      id,
+    const product = await productServices.updateProduct({ ...req.body }, id, {
+      transaction,
     });
-
+    await outboxServices.createOutbox(
+      kafka.producer.events.productUpdated,
+      { ...req.body, id },
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }
 
 async function deleteProduct(req, res, next) {
   const { id } = req.params;
+  const transaction = await sequelize.transaction();
   try {
-    const product = await productServices.deleteProduct(id);
-    await kafkaProducer(kafka.producer.events.productDeleted, { id });
+    const product = await productServices.deleteProduct(id, { transaction });
+    await outboxServices.createOutbox(
+      kafka.producer.events.productDeleted,
+      { id },
+      { transaction },
+    );
+    await transaction.commit();
     return res.status(StatusCodes.OK).send();
   } catch (e) {
+    await transaction.rollback();
     next(e);
   }
 }

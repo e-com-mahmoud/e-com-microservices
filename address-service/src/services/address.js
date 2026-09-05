@@ -1,7 +1,7 @@
 const models = require("../models");
 
-async function createAddress(data) {
-  return models.Address.create(data);
+async function createAddress(data, options = {}) {
+  return models.Address.create(data, options);
 }
 
 async function findUserAddresses(id) {
@@ -31,12 +31,12 @@ async function checkAddressUser(userId, id) {
   });
 }
 
-async function updateAddress(data, id) {
-  return models.Address.update(data, { where: { id } });
+async function updateAddress(data, id, options = {}) {
+  return models.Address.update(data, { where: { id } }, options);
 }
 
-async function deleteAddress(id) {
-  return models.Address.destroy({ where: { id } });
+async function deleteAddress(id, options = {}) {
+  return models.Address.destroy({ where: { id } }, options);
 }
 
 const addressServices = {

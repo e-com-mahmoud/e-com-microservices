@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         targetKey: "id",
       });
-      Order.belongsTo(models.Address, {
-        foreignKey: "addressId",
-        targetKey: "id",
-      });
       Order.hasMany(models.OrderItem, {
         foreignKey: "orderId",
         targetKey: "id",
@@ -31,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      cartId: {
         type: DataTypes.UUID,
         allowNull: false,
       },

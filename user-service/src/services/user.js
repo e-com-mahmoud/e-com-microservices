@@ -1,7 +1,7 @@
 const models = require("../models");
 
-async function createUser(userDetails) {
-  return models.User.create(userDetails);
+async function createUser(userDetails, options = {}) {
+  return models.User.create(userDetails, options);
 }
 
 async function findUserByEmail(email) {
@@ -32,12 +32,12 @@ async function getUserProfile(id) {
     },
   });
 }
-async function updateUser(data, id) {
-  return models.User.update(data, { where: { id } });
+async function updateUser(data, id, option = {}) {
+  return models.User.update(data, { where: { id } }, option);
 }
 
-async function deleteUser(id) {
-  return models.User.destroy({ where: { id } });
+async function deleteUser(id, option = {}) {
+  return models.User.destroy({ where: { id } }, option);
 }
 
 const services = {
