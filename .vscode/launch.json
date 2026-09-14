@@ -5,7 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "User Service",
-      "program": "${workspaceFolder}/user-service/index.js",
+      "program": "${workspaceFolder}/user-service/src/index.js",
       "cwd": "${workspaceFolder}/user-service",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -13,8 +13,32 @@
       "type": "node",
       "request": "launch",
       "name": "Address Service",
-      "program": "${workspaceFolder}/address-service/index.js",
+      "program": "${workspaceFolder}/address-service/src/index.js",
       "cwd": "${workspaceFolder}/address-service",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Product Service",
+      "program": "${workspaceFolder}/product-service/src/index.js",
+      "cwd": "${workspaceFolder}/product-service",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Cart Service",
+      "program": "${workspaceFolder}/cart-service/src/index.js",
+      "cwd": "${workspaceFolder}/cart-service",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Order Service",
+      "program": "${workspaceFolder}/order-service/src/index.js",
+      "cwd": "${workspaceFolder}/order-service",
       "skipFiles": ["<node_internals>/**"]
     }
   ]
